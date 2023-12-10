@@ -24,8 +24,8 @@ for(let token = 0; token < spl.length; ++token){
     if(spl[token] === ")"){
         let first_1 = stack.at(-1);
         while(first_1 !== "("){          //todo м.б убрать pop и at и оставить только pop
-            Out += stack.at(-1);
-            stack.pop();
+            Out += stack.pop();
+
             first_1 = stack.at(-1);
         }
         stack.pop();
@@ -52,8 +52,8 @@ for(let token = 0; token < spl.length; ++token){
             }
             if (priority[spl[token]] < priority[first]) {
                 while (priority[spl[token]] <= priority[first]) {
-                    Out += first;
-                    stack.pop();
+                    Out += stack.pop();     ///было first
+
                     first = stack.at(-1);
                 }
                 stack.push(spl[token]);
