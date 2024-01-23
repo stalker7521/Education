@@ -1,12 +1,14 @@
 let arg = process.argv;
-let str = arg[2];
+let str = arg[2].replaceAll(' ', '');
 //let str = '1 + 2 * ( 4 / 2 ) ^ 2 ^ 3 - 1';
-
-let spl = str.split(' ')
+let spl = str.split('')
 let Out = '';
-//---------------------------------
+//---------------------------------приоритеты операций
 let priority= new Object();
-priority['-'] = priority['+'] = 1; priority['*'] = priority['/'] = 2; priority['^'] = 3; priority['('] = 0; //приоритеты операций
+priority['('] = 0;
+priority['-'] = priority['+'] = 1;
+priority['*'] = priority['/'] = 2;
+priority['^'] = 3;
 
 let stack = [];
 
@@ -22,11 +24,8 @@ for(let token = 0; token < spl.length; ++token){
         continue;
     }
     if(spl[token] === ")"){
-        let first_1 = stack.at(-1);
-        while(first_1 !== "("){          //todo м.б убрать pop и at и оставить только pop
+        while(stack.at(-1) !== "("){
             Out += stack.pop();
-
-            first_1 = stack.at(-1);
         }
         stack.pop();
         continue;
@@ -36,67 +35,67 @@ for(let token = 0; token < spl.length; ++token){
     }
 
     else{
-        let first = stack.at(-1);
-        if(stack.length === 0  ) {
+        if (stack.length === 0) {
             stack.push(spl[token]);
         }
         else {
-
+            let first = stack.at(-1);
             if (priority[spl[token]] > priority[first]) {
                 stack.push(spl[token]);
             }
             if (priority[spl[token]] === priority[first]) {
-                Out += first;
-                stack.pop();
+                Out += stack.pop();
                 stack.push(spl[token]);
             }
             if (priority[spl[token]] < priority[first]) {
                 while (priority[spl[token]] <= priority[first]) {
-                    Out += stack.pop();     ///было first
-
+                    Out += stack.pop();
                     first = stack.at(-1);
                 }
                 stack.push(spl[token]);
-
             }
         }
-}   }
+    }
+}
+
 while(stack.length !== 0){
     Out += stack.pop();
 }
 
-console.log("Reverse Polish Notation: ",Out, '\n');
+console.log("Reverse Polish Notation: ", Out, '\n');
 console.log("Calculating the result of Polish Notation.....", '\n');
 
 //-----------------------decode------------------------
-function reversePolish(newStr) {
-    let Nstr = newStr.split("");
+function decode(Out) {
+    let splString = Out.split("");
     let stack =[];
-    if(Nstr === ''){
-        return 0;
+    if(splString === ''){
+        return "Empty String";
     }
-    for(let i=0; i<Nstr.length; i++) {
-        if(!isNaN(Nstr[i])) {
-            stack.push(Nstr[i]);
-        }else {
+    for(let i=0; i<splString.length; i++) {
+        if(!isNaN(splString[i])) {
+            stack.push(splString[i]);
+        }
+        else {
             let a = stack.pop();
             let b = stack.pop();
-            if(Nstr[i] === "+") {
+            if(splString[i] === "+") {
                 stack.push(parseInt(a) + parseInt(b));
-            } else if(Nstr[i] === "-") {
+            } else if(splString[i] === "-") {
                 stack.push(parseInt(b) - parseInt(a));
-            } else if(Nstr[i] === "*") {
+            } else if(splString[i] === "*") {
                 stack.push(parseInt(a) * parseInt(b));
-            } else if(Nstr[i] === "/") {
+            } else if(splString[i] === "/") {
                 stack.push(parseInt(b) / parseInt(a));
-            } else if(Nstr[i] === "^") {
+            } else if(splString[i] === "^") {
                 stack.push(Math.pow(parseInt(b), parseInt(a)));
             }
         }
     }
     if(stack.length > 1) {
         return "Error";
-    }else {
+    }
+    else {
         return stack[0];
     }
 }
@@ -105,9 +104,9 @@ let str_eval = str;
 for(let i =0; i < str.length; ++i){str_eval = str_eval.replace("^", "**")}
 
 //---------------------------
-if (eval(str_eval) === reversePolish((Out.toString()))){
+if (eval(str_eval) === decode((Out))){
     console.log("Checking the correct calculation of Polish Notation.......", '\n');
     console.log("Congratulations! The result is correct, the lines match!", '\n');
 }
 
-console.log('The result of the expression: ',reversePolish((Out.toString())));
+console.log('The result of the expression: ',decode((Out)));
