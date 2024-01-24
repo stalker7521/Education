@@ -23,9 +23,9 @@ if (mode === "code"){                 /* выбираем режим работ�
 
         while (i < inText.length){
             let symb = inText.charAt(i);
-            while(inText.charAt(i) === inText.charAt(i+n))
+            while(inText.charAt(i) === inText.charAt(i+n)) {
                 n++;
-
+            }
             if (  (symb === "#")|| (4 <= n && n <= 255) ){
                 testString += "#" + String.fromCharCode(n) + symb;
             }
