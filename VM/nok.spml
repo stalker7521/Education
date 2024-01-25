@@ -1,0 +1,4 @@
+set a 50
+set b 3576
+nok a b c
+output c
