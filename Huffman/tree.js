@@ -82,9 +82,9 @@ console.log(result);
 
 
 //декодировка сообщения
-let OriginalString = "";                                      //сюда потом запишется оригинальная строка)
+let OriginalString = "";                                     
 let place = tree.length - 1;
-for (let i=0;i < result.length;i++){                                    //спускаемся по дереву вниз
+for (let i=0;i < result.length;i++){                                   
     if (result[i] === "1"){
         place = tree[place].rson;
         if (tree[place].rson === -1){
